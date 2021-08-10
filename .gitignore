@@ -16,10 +16,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -30,7 +26,12 @@
 *.exe
 *.out
 *.app
+*.exe
 
 # Jupyter 
-*.ipynb_checkpoints/
+.ipynb_checkpoints/
 *.png
+
+# VS
+.vs/
+.vscode/
