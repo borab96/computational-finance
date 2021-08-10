@@ -1,0 +1,44 @@
+3 
+1131.27 10 67 67 67 67 67 67 67 67 67 1067 
+1121.39 11 70 70 70 70 70 70 70 70 70 70 1070 
+1148.75 12 75 75 75 75 75 75 75 75 75 75 75 1075 
+1790.85 10 
+----------------
+Input File: input2
+We owe 1790.85 in 10 years
+Number of Cash Flows: 3
+---------------------------
+Cash Flow #1
+Price = 1131.27
+Maturity = 10
+Yield to Maturity = 0.0499999
+Duration = 7.7587
+Convexity = 70.4264
+Percentage of Face Value that would meet the obligation = 0.943188
+---------------------------
+Cash Flow #2
+Price = 1121.39
+Maturity = 11
+Yield to Maturity = 0.0549998
+Duration = 8.20531
+Convexity = 79.1966
+Percentage of Face Value that would meet the obligation = 0.954173
+---------------------------
+Cash Flow #3
+Price = 1148.75
+Maturity = 12
+Yield to Maturity = 0.0574999
+Duration = 8.58082
+Convexity = 87.6798
+Percentage of Face Value that would meet the obligation = 0.9358
+---------------------------
+/* Objective function */
+max: +70.426358274 C1 +79.1965728543 C2 +87.6798371356 C3;
+
+/* Constraints */
++C1 +C2 +C3 = 1;
++7.7586964588 C1 +8.20531374315 C2 +8.58082281547 C3 = 10;
+R3: +C1 >= 0;
+R4: +C2 >= 0;
+R5: +C3 >= 0;
+No portfolio that meats duration constraint...

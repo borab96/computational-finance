@@ -1,0 +1,6 @@
+﻿  trinom_DP.cpp
+C:\Users\borab\Dropbox\Programming\Finance\ComputationalFinance\trinomial_option_price_DP\src\trinom_DP.cpp(133,13): warning C4244: 'return': conversion from 'Real' to 'float', possible loss of data
+C:\Users\borab\Dropbox\Programming\Finance\ComputationalFinance\trinomial_option_price_DP\src\trinom_DP.cpp(188,13): warning C4244: 'return': conversion from 'Real' to 'float', possible loss of data
+C:\Users\borab\Dropbox\Programming\Finance\ComputationalFinance\trinomial_option_price_DP\src\trinom_DP.cpp(204,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\borab\Dropbox\Programming\Finance\ComputationalFinance\trinomial_option_price_DP\src\trinom_DP.cpp(205,21): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  trinomial_option_price_DP.vcxproj -> C:\Users\borab\Dropbox\Programming\Finance\ComputationalFinance\trinomial_option_price_DP\Debug\trinomial_option_price_DP.exe

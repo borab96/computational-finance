@@ -1,0 +1,51 @@
+3 
+1051.52 10 67 67 67 67 67 67 67 67 67 1067 
+1095.96 15 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 1069.88 
+986.24 30 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 1059 
+1790.85 10 
+----------------
+Input File: input3
+We owe 1790.85 in 10 years
+Number of Cash Flows: 3
+---------------------------
+Cash Flow #1
+Price = 1051.52
+Maturity = 10
+Yield to Maturity = 0.0600001
+Duration = 7.6655
+Convexity = 67.9958
+Percentage of Face Value that would meet the obligation = 1.01472
+---------------------------
+Cash Flow #2
+Price = 1095.96
+Maturity = 15
+Yield to Maturity = 0.0599997
+Duration = 10
+Convexity = 121.484
+Percentage of Face Value that would meet the obligation = 0.976204
+---------------------------
+Cash Flow #3
+Price = 986.24
+Maturity = 30
+Yield to Maturity = 0.0599996
+Duration = 14.6361
+Convexity = 296.143
+Percentage of Face Value that would meet the obligation = 1.07378
+---------------------------
+/* Objective function */
+max: +67.9957939992 C1 +121.484343004 C2 +296.142730701 C3;
+
+/* Constraints */
++C1 +C2 +C3 = 1;
++7.6654972511 C1 +10.0000160686 C2 +14.6360950736 C3 = 10;
+R3: +C1 >= 0;
+R4: +C2 >= 0;
+R5: +C3 >= 0;
+Largest convexity: 144.403824
+-------------------------------
+Optimal bond portfolio weights
+-------------------------------
+For each $1 of PV owed, buy
+cash flow 1: 0.665093
+cash flow 2: 0.000000
+cash flow 3: 0.334907

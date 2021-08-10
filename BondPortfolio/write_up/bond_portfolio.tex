@@ -1,0 +1,307 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage[margin=2.5cm,headheight=15pt]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{slashed}
+\usepackage{pdfpages}
+\usepackage{braket}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{float}
+%\usepackage{tikz}
+\usepackage{tensor}
+\usepackage{amsthm}
+\newtheorem{corollary}{Corollary}
+\newtheorem{prop}{Proposition}
+
+\newcommand{\CLASS}{IE 523}
+\newcommand{\HWNO}{5}
+\newcommand{\mathsym}[1]{{}}
+\newcommand{\unicode}[1]{{}}
+\newcommand{\prt}{\partial}
+\newcommand{\ID}{\ensuremath{\mathbbm{1}}}
+\newcommand{\lag}{\mathcal{L}}
+\newcommand{\EQ}{&=}
+\newcommand{\COMMENT}[1]{\textcolor{red}{[#1]}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\DK}{\frac{d^4k}{(2 \pi)^4}}
+\newcommand{\DDK}{\frac{d^dk}{(2 \pi)^d}}
+\newcommand{\DP}{\frac{d^4p}{(2 \pi)^4}}
+\newcommand{\DDP}{\frac{d^dp}{(2 \pi)^d}}
+%\usepackage{csc}
+\pagestyle{fancy}
+\fancyhead[L]{Bora Basa}
+\fancyhead[R]{\CLASS}
+\title{Problem Set \HWNO}
+\author{Bora Basa}
+
+\usepackage{hyperref}
+\begin{document}
+\begin{titlepage}
+    \setlength{\parindent}{0pt}
+    \vspace*{-3.8\baselineskip}
+    \CLASS
+    \begin{center}
+    \vspace{.1\textheight}
+    {\huge\bfseries Portfolio Optimization under Parallel Shifts in Term Structure \par}
+    \bigbreak
+    {\bfseries\large Bora Basa\par}
+    \bigbreak
+    \today
+\end{center}
+\end{titlepage}
+%-------------------------------------------------------------------%
+\paragraph{Introduction}
+
+A future debt obligation extending over a period of time in which one expects changes in interest rates should be immunized against those changes. Assuming an $r\to r+\delta r$ can be taken as the homogeneous change of interest rate for a bond portfolio of variable maturities (which usually is \emph{not} the case), one can construct a bond portfolio with effective duration matching that of the debt. Then, ideally, one hopes to tune the portfolio so that its convexity matches or exceeds the convexity of the liability. If this is not possible/feasible, the optimal portfolio will be one of maximum convexity. 
+
+The problem we wish to solve then is 
+\begin{align*}
+   \text{max}_{\vec\lambda} \sum_i\lambda_i C_i 
+\end{align*}
+subject to 
+\begin{align*}
+   &\sum_i\lambda_i = 1 \\
+   &\sum_i \lambda_i D_i = D_0\\
+   &\lambda_i\geq 0
+\end{align*}
+where $D_i$ and $C_i$ are the duration and convexity of bond $i$ respectively. $D_0$ is the time left until the debt is due. The first of the constraints is a normalization condition that isn't strictly necessary (but useful). The second constraint ensures that the debt obligation will be met by the due date. The final constraint implements a long-only portfolio. 
+
+\paragraph{Parameter parsing} The input file is parsed into a vector of vectors wrapped with some printing and traversal methods. The data is then read from this structure.
+
+\paragraph{Bond parameters} The code computes the YTM, duration and convexity of each bond in the portfolio. The YTM is computed using the Newton-Raphson method of finding zeros. The duration and convexity are obtained from the first and second order interest rate expansion of the bond price respectively. We also compute how much of any given bond one would have to purchase to meet the debt obligation assuming the interest rate remains fixed until the due date. 
+
+\paragraph{Optimization}
+
+The optimization problem outlined above is a linear maximization problem. We implement it using lp solve. The solution of the problem is a set of positive portfolio weights, $\{\lambda_i\}_{i\in I}$. In words, this is the fraction of bond $i$ one has to purchase for each \$1 of the present value of debt so that the debt is immunized.
+
+\paragraph{Output 1}
+
+\begin{verbatim}
+    ----------------
+Input File: input1
+We owe 1790.85 in 10 years
+Number of Cash Flows: 5
+---------------------------
+Cash Flow #1
+Price = 1131.27
+Maturity = 10
+Yield to Maturity = 0.0499999
+Duration = 7.7587
+Convexity = 70.4264
+Percentage of Face Value that would meet the obligation = 0.943188
+---------------------------
+Cash Flow #2
+Price = 1069.88
+Maturity = 15
+Yield to Maturity = 0.0625639
+Duration = 9.93582
+Convexity = 119.831
+Percentage of Face Value that would meet the obligation = 1
+---------------------------
+Cash Flow #3
+Price = 863.5
+Maturity = 30
+Yield to Maturity = 0.07
+Duration = 13.6774
+Convexity = 262.769
+Percentage of Face Value that would meet the obligation = 1.2264
+---------------------------
+Cash Flow #4
+Price = 1148.75
+Maturity = 12
+Yield to Maturity = 0.0574999
+Duration = 8.58082
+Convexity = 87.6798
+Percentage of Face Value that would meet the obligation = 0.9358
+---------------------------
+Cash Flow #5
+Price = 1121.39
+Maturity = 11
+Yield to Maturity = 0.0549998
+Duration = 8.20531
+Convexity = 79.1966
+Percentage of Face Value that would meet the obligation = 0.954173
+---------------------------
+/* Objective function */
+max: +70.426358274 C1 +119.83139286 C2 +262.769026151 C3 +87.6798371356 C4 +79.1965728543 C5;
+
+/* Constraints */
++C1 +C2 +C3 +C4 +C5 = 1;
++7.7586964588 C1 +9.93582013734 C2 +13.6774442002 C3 +8.58082281547 C4 +8.20531374315 C5 = 10;
+R3: +C1 >= 0;
+R4: +C2 >= 0;
+R5: +C3 >= 0;
+R6: +C4 >= 0;
+R7: +C5 >= 0;
+Largest convexity: 143.262425
+-------------------------------
+Optimal bond portfolio weights
+-------------------------------
+For each $1 of PV owed, buy
+cash flow 1: 0.621321
+cash flow 2: 0.000000
+cash flow 3: 0.378679
+cash flow 4: 0.000000
+cash flow 5: 0.000000
+\end{verbatim}
+
+
+\paragraph{Output 2}
+
+\begin{verbatim}
+----------------
+Input File: input2
+We owe 1790.85 in 10 years
+Number of Cash Flows: 3
+---------------------------
+Cash Flow #1
+Price = 1131.27
+Maturity = 10
+Yield to Maturity = 0.0499999
+Duration = 7.7587
+Convexity = 70.4264
+Percentage of Face Value that would meet the obligation = 0.943188
+---------------------------
+Cash Flow #2
+Price = 1121.39
+Maturity = 11
+Yield to Maturity = 0.0549998
+Duration = 8.20531
+Convexity = 79.1966
+Percentage of Face Value that would meet the obligation = 0.954173
+---------------------------
+Cash Flow #3
+Price = 1148.75
+Maturity = 12
+Yield to Maturity = 0.0574999
+Duration = 8.58082
+Convexity = 87.6798
+Percentage of Face Value that would meet the obligation = 0.9358
+---------------------------
+/* Objective function */
+max: +70.426358274 C1 +79.1965728543 C2 +87.6798371356 C3;
+
+/* Constraints */
++C1 +C2 +C3 = 1;
++7.7586964588 C1 +8.20531374315 C2 +8.58082281547 C3 = 10;
+R3: +C1 >= 0;
+R4: +C2 >= 0;
+R5: +C3 >= 0;
+No portfolio that meats duration constraint...
+\end{verbatim}
+
+\paragraph{Output 3}
+
+\begin{verbatim}
+
+----------------
+Input File: input3
+We owe 1790.85 in 10 years
+Number of Cash Flows: 3
+---------------------------
+Cash Flow #1
+Price = 1051.52
+Maturity = 10
+Yield to Maturity = 0.0600001
+Duration = 7.6655
+Convexity = 67.9958
+Percentage of Face Value that would meet the obligation = 1.01472
+---------------------------
+Cash Flow #2
+Price = 1095.96
+Maturity = 15
+Yield to Maturity = 0.0599997
+Duration = 10
+Convexity = 121.484
+Percentage of Face Value that would meet the obligation = 0.976204
+---------------------------
+Cash Flow #3
+Price = 986.24
+Maturity = 30
+Yield to Maturity = 0.0599996
+Duration = 14.6361
+Convexity = 296.143
+Percentage of Face Value that would meet the obligation = 1.07378
+---------------------------
+/* Objective function */
+max: +67.9957939992 C1 +121.484343004 C2 +296.142730701 C3;
+
+/* Constraints */
++C1 +C2 +C3 = 1;
++7.6654972511 C1 +10.0000160686 C2 +14.6360950736 C3 = 10;
+R3: +C1 >= 0;
+R4: +C2 >= 0;
+R5: +C3 >= 0;
+Largest convexity: 144.403824
+-------------------------------
+Optimal bond portfolio weights
+-------------------------------
+For each $1 of PV owed, buy
+cash flow 1: 0.665093
+cash flow 2: 0.000000
+cash flow 3: 0.334907
+
+\end{verbatim}
+
+\paragraph{Output 4}
+Input data - variation of input1, with smaller debt obligation, longer duration.
+\begin{verbatim}
+    3
+1069.88 15 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 69.88 1069.88
+863.5 30 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 1059
+1148.75 12 75 75 75 75 75 75 75 75 75 75 75 1075
+1500 12
+\end{verbatim}
+\begin{verbatim}
+    ----------------
+Input File: input4
+We owe 1500 in 12 years
+Number of Cash Flows: 3
+---------------------------
+Cash Flow #1
+Price = 1069.88
+Maturity = 15
+Yield to Maturity = 0.0625639
+Duration = 9.93582
+Convexity = 119.831
+Percentage of Face Value that would meet the obligation = 1
+---------------------------
+Cash Flow #2
+Price = 863.5
+Maturity = 30
+Yield to Maturity = 0.07
+Duration = 13.6774
+Convexity = 262.769
+Percentage of Face Value that would meet the obligation = 1.2264
+---------------------------
+Cash Flow #3
+Price = 1148.75
+Maturity = 12
+Yield to Maturity = 0.0574999
+Duration = 8.58082
+Convexity = 87.6798
+Percentage of Face Value that would meet the obligation = 0.9358
+---------------------------
+/* Objective function */
+max: +119.83139286 C1 +262.769026151 C2 +87.6798371356 C3;
+
+/* Constraints */
++C1 +C2 +C3 = 1;
++9.93582013734 C1 +13.6774442002 C2 +8.58082281547 C3 = 12;
+R3: +C1 >= 0;
+R4: +C2 >= 0;
+R5: +C3 >= 0;
+Largest convexity: 205.142155
+-------------------------------
+Optimal bond portfolio weights
+-------------------------------
+For each $1 of PV owed, buy
+cash flow 1: 0.000000
+cash flow 2: 0.670871
+cash flow 3: 0.329129
+\end{verbatim}
+\end{document}

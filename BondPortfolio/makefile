@@ -1,0 +1,8 @@
+CC = g++
+
+TARGET = bond_portfolio
+
+LDFLAGS= -L./lib/ -llpsolve55 -I./lib
+
+bond_portfolio: bond_portfolio.cpp
+	$(CC) -o $(TARGET) $(TARGET).cpp $(LDFLAGS)
